@@ -192,6 +192,10 @@ def awakened_boss(original_name: str):
     )
 
     awakened_boss_data = cur.fetchone()
+    if awakened_boss_data is None:
+        conn.close()
+        return None
+
     boss_id, name, pfp, species, tier, xp, unlocks_species_id = awakened_boss_data
 
     cur.execute(

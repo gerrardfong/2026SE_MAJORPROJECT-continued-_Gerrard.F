@@ -104,11 +104,13 @@ def battle_outcome() -> str:
         current_enemy = session["gauntlet"]["current_enemy"]
 
         if current_enemy.get("is_boss"):
-            awakened = dbChar.awakened_boss(current_enemy["name"])
-            if awakened:
-                session["gauntlet"]["current_enemy"] = awakened
-                session.modified = True
-                return "boss_awakened", breakdown      
+            # Only non-awakened bosses can transform into their awakened phase.
+            if not current_enemy["name"].endswith("_awakened"):
+                awakened = dbChar.awakened_boss(current_enemy["name"])
+                if awakened:
+                    session["gauntlet"]["current_enemy"] = awakened
+                    session.modified = True
+                    return "boss_awakened", breakdown
             if current_enemy["unlocks_species_id"]:
                 unlock_species(current_enemy["unlocks_species_id"])
 
